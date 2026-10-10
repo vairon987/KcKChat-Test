@@ -1,121 +1,133 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>VnC Chat — P2P</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VnC Chat — FIXED</title>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap" rel="stylesheet">
 <script src="https://unpkg.com/peerjs@1.5.3/dist/peerjs.min.js"></script>
 <style>
-:root{--bg:#070708;--panel:#111113;--panel2:#17171a;--border:#222227;--text:#f5f5f7;--muted:#9a9aa3;--dim:#5f5f68;--acc:#fff;--green:#22c55e;--mono:'Geist Mono',monospace;--sans:'Geist',sans-serif}
+:root{--bg:#070708;--panel:#111113;--panel2:#17171a;--border:#222227;--text:#f5f5f7;--muted:#9a9aa3;--dim:#5f5f68;--green:#22c55e;--mono:'Geist Mono',monospace;--sans:'Geist',sans-serif}
 *{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:var(--sans);height:100dvh;overflow:hidden;display:flex}
 #login{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px}
 .login-card{width:100%;max-width:380px;background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:28px}
-.login-card h1{font-size:22px;letter-spacing:-.03em;font-weight:600}.login-card p{font-size:13px;color:var(--muted);margin:8px 0 20px;line-height:1.5}
-.label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin:14px 0 8px;display:block}
-.input{width:100%;background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-family:var(--sans);font-size:14px;outline:none;transition:.2s}
-.input:focus{border-color:#3a3a40}.input.mono{font-family:var(--mono);letter-spacing:.04em}
-.row{display:flex;gap:8px}.btn{border:none;border-radius:999px;padding:11px 16px;font-size:13px;font-weight:500;cursor:pointer;transition:.2s;font-family:var(--sans)}
-.btn-primary{background:var(--text);color:var(--bg)}.btn-primary:hover{opacity:.9}.btn-ghost{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
-.badge{font-family:var(--mono);font-size:10px;border:1px solid var(--border);padding:3px 8px;border-radius:999px;color:var(--muted)}
+.login-card h1{font-size:22px;font-weight:600}.login-card p{font-size:13px;color:var(--muted);margin:8px 0 20px}
+.label{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin:14px 0 8px;display:block}
+.input{width:100%;background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:14px;outline:none}
+.input.mono{font-family:var(--mono)}.row{display:flex;gap:8px}.btn{border:none;border-radius:999px;padding:11px 16px;font-size:13px;font-weight:500;cursor:pointer}
+.btn-primary{background:var(--text);color:var(--bg);flex:1}.btn-ghost{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
 .sidebar{width:320px;background:var(--panel);border-right:1px solid var(--border);display:flex;flex-direction:column}
-.side-h{padding:18px 18px 12px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
-.me{display:flex;gap:10px;align-items:center}.avatar{width:36px;height:36px;border-radius:50%;background:var(--panel2);border:1px solid var(--border);display:grid;place-items:center;font-weight:600;font-size:13px}
+.side-h{padding:18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.me{display:flex;gap:10px;align-items:center}.avatar{width:36px;height:36px;border-radius:50%;background:var(--panel2);border:1px solid var(--border);display:grid;place-items:center;font-weight:600}
 .me b{font-size:13px;display:block}.me span{font-size:11px;color:var(--muted);font-family:var(--mono)}
-.search-wrap{padding:12px;border-bottom:1px solid var(--border)}.search{display:flex;gap:8px}
-.list{flex:1;overflow:auto;padding:8px}.item{padding:10px 12px;border-radius:12px;display:flex;gap:10px;align-items:center;cursor:pointer;transition:.15s;border:1px solid transparent}
-.item:hover{background:var(--panel2)}.item.active{background:var(--panel2);border-color:var(--border)}
-.item.av{width:32px;height:32px;border-radius:50%;background:var(--panel2);border:1px solid var(--border);display:grid;place-items:center;font-size:12px;font-weight:600}
-.item b{font-size:13px}.item i{font-size:11px;color:var(--muted);font-style:normal;font-family:var(--mono);display:block;margin-top:1px}
-.main{flex:1;display:flex;flex-direction:column;background:var(--bg)}
-.main-h{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.search-wrap{padding:12px;border-bottom:1px solid var(--border)}.search{display:flex;gap:8px}.list{flex:1;overflow:auto;padding:8px}
+.item{padding:10px 12px;border-radius:12px;display:flex;gap:10px;align-items:center;cursor:pointer}.item:hover,.item.active{background:var(--panel2);border:1px solid var(--border)}
+.main{flex:1;display:flex;flex-direction:column}.main-h{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between}
 .msgs{flex:1;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:10px}
-.bubble{max-width:72%;padding:10px 14px;border-radius:18px;font-size:13.5px;line-height:1.45;position:relative}
-.bubble.me{margin-left:auto;background:var(--text);color:var(--bg);border-bottom-right-radius:6px}
-.bubble.them{background:var(--panel);border:1px solid var(--border);border-bottom-left-radius:6px}
-.bubble.time{font-size:10px;color:var(--dim);margin-top:4px;font-family:var(--mono)}
-.composer{padding:12px 14px;border-top:1px solid var(--border);display:flex;gap:10px;align-items:center;background:var(--panel)}
-.composer input{flex:1;background:var(--panel2);border:1px solid var(--border);border-radius:999px;padding:12px 16px;color:var(--text);outline:none;font-size:14px}
-.empty{flex:1;display:grid;place-items:center;color:var(--muted);text-align:center;padding:40px}.empty h3{color:var(--text);font-size:16px;margin-bottom:6px}
-.status{font-size:11px;font-family:var(--mono);padding:4px 8px;border-radius:999px;border:1px solid var(--border);color:var(--muted)}
-.status.on{color:var(--green);border-color:#1f3a26}
-@media(max-width:800px){.sidebar{position:absolute;inset:0;z-index:10;transform:translateX(-100%);transition:.25s}.sidebar.open{transform:none}body.show-side.sidebar{transform:none}}
+.bubble{max-width:72%;padding:10px 14px;border-radius:18px;font-size:13.5px}.bubble.me{margin-left:auto;background:var(--text);color:var(--bg);border-bottom-right-radius:6px}.bubble.them{background:var(--panel);border:1px solid var(--border);border-bottom-left-radius:6px}
+.composer{padding:12px;border-top:1px solid var(--border);display:flex;gap:10px;background:var(--panel)}.composer input{flex:1;background:var(--panel2);border:1px solid var(--border);border-radius:999px;padding:12px 16px;color:var(--text);outline:none}
+.empty{flex:1;display:grid;place-items:center;color:var(--muted);text-align:center}.status{font-size:11px;font-family:var(--mono);border:1px solid var(--border);padding:4px 8px;border-radius:999px}.status.on{color:var(--green)}
 </style>
 </head>
 <body>
-<div id="login">
-<div class="login-card">
-<h1>VnC Chat</h1><p>Chat P2P sesama perangkat. Format ID wajib <b style="color:var(--text)">VnC-XXXX-XXXX</b>. Full frontend, tanpa server.</p>
-<span class="label">Nama kamu</span><input id="nameIn" class="input" placeholder="contoh: Vai">
+<div id="login"><div class="login-card">
+<h1>VnC Chat</h1><p>Format ID wajib VnC-XXXX-XXXX. Full frontend P2P.</p>
+<span class="label">Nama kamu</span><input id="nameIn" class="input" placeholder="Vairon">
 <span class="label">Nomer VnC</span><div class="row"><input id="numIn" class="input mono" placeholder="VnC-1234-5678"><button class="btn btn-ghost" onclick="randNum()">Random</button></div>
-<div style="margin-top:18px;display:flex;gap:8px"><button class="btn btn-primary" style="flex:1" onclick="doLogin()">Masuk & Simpan</button></div>
-<p style="margin-top:14px;font-size:11px;color:var(--dim);font-family:var(--mono)">ID peer = nomer VnC kamu. Share nomer ini ke teman biar bisa connect HP ke HP.</p>
-</div>
-</div>
+<div style="margin-top:18px"><button class="btn btn-primary" onclick="doLogin()">Masuk & Simpan</button></div>
+</div></div>
 
-<div class="sidebar" id="sidebar">
-<div class="side-h"><div class="me"><div class="avatar" id="myAv">V</div><div><b id="myName">-</b><span id="myNum">VnC-0000-0000</span></div></div><span class="status" id="pStatus">offline</span></div>
-<div class="search-wrap"><div class="search"><input id="searchIn" class="input mono" placeholder="Cari VnC-XXXX-XXXX" style="font-size:12.5px"><button class="btn btn-ghost" onclick="addContact()" style="padding:10px 14px">+</button></div><div style="display:flex;gap:6px;margin-top:10px"><button class="btn btn-ghost" style="font-size:12px;flex:1" onclick="selectGlobal()"># Global Chat</button><button class="btn btn-ghost" style="font-size:12px" onclick="toggleSide()">☰</button></div></div>
+<div class="sidebar"><div class="side-h"><div class="me"><div class="avatar" id="myAv">V</div><div><b id="myName">-</b><span id="myNum">-</span></div></div><span class="status" id="pStatus">offline</span></div>
+<div class="search-wrap"><div class="search"><input id="searchIn" class="input mono" placeholder="VnC-XXXX-XXXX"><button class="btn btn-ghost" onclick="addContact()">+</button></div>
+<button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="selectGlobal()"># Global Chat</button></div>
 <div class="list" id="contactList"></div>
-<div style="padding:10px;border-top:1px solid var(--border);display:flex;gap:8px"><button class="btn btn-ghost" style="font-size:11px;flex:1" onclick="logout()">Logout / Ganti ID</button></div>
+<button class="btn btn-ghost" style="margin:10px;font-size:11px" onclick="logout()">Logout</button>
 </div>
 
-<div class="main">
-<div class="main-h"><div><b id="chatTitle" style="font-size:14px">Pilih chat</b><div id="chatSub" style="font-size:11px;color:var(--muted);font-family:var(--mono)">-</div></div><button class="btn btn-ghost" id="mobBtn" onclick="document.body.classList.toggle('show-side')">Kontak</button></div>
-<div class="msgs" id="msgs"><div class="empty"><div><h3>Belum ada chat dipilih</h3><p style="font-size:13px;color:var(--muted)">Tambah kontak pake nomer VnC temen lu, atau buka Global Chat.</p></div></div></div>
-<div class="composer"><input id="msgIn" placeholder="Ketik pesan..." onkeydown="if(event.key==='Enter')sendMsg()"><button class="btn btn-primary" onclick="sendMsg()">Kirim</button></div>
+<div class="main"><div class="main-h"><div><b id="chatTitle">Pilih chat</b><div id="chatSub" style="font-size:11px;color:var(--muted);font-family:var(--mono)">-</div></div></div>
+<div class="msgs" id="msgs"></div>
+<div class="composer"><input id="msgIn" placeholder="Ketik pesan..." onkeydown="if(event.key==='Enter')sendMsg()"><button class="btn btn-primary" style="flex:0" onclick="sendMsg()">Kirim</button></div>
 </div>
 
 <script>
 const $=s=>document.getElementById(s);
 const gen=()=>{const r=()=>Math.floor(1000+Math.random()*9000);return `VnC-${r()}-${r()}`};
 function randNum(){ $('numIn').value=gen(); }
-function validVnC(s){return /^VnC-\d{4}-\d{4}$/i.test(s.trim())}
+function validVnC(s){ return /^vnc-\d{4}-\d{4}$/i.test(s.trim()); }
 let myProfile=JSON.parse(localStorage.getItem('vnc_profile')||'null');
 let contacts=JSON.parse(localStorage.getItem('vnc_contacts')||'[]');
-let current=null;
-let peer=null, conns={};
+let current=null,peer=null,conns={};
 const chan=new BroadcastChannel('vnc_global');
+
 function doLogin(){
- const name=$('nameIn').value.trim(); let num=$('numIn').value.trim().toUpperCase();
+ const name=$('nameIn').value.trim();
+ let raw=$('numIn').value.trim();
  if(!name){alert('Nama wajib');return}
- if(!validVnC(num)){alert('Format wajib VnC-XXXX-XXXX');return}
- myProfile={name,num,created:Date.now()};
- localStorage.setItem('vnc_profile',JSON.stringify(myProfile));
- init();
+ if(!validVnC(raw)){alert('Format wajib VnC-XXXX-XXXX contoh VnC-1234-5678');return}
+ const m=raw.match(/(\d{4})-(\d{4})/);
+ let num=`VnC-${m[1]}-${m[2]}`;
+ myProfile={name,num}; localStorage.setItem('vnc_profile',JSON.stringify(myProfile)); init();
 }
-function logout(){if(confirm('Logout?')){localStorage.removeItem('vnc_profile');location.reload()}}
+function logout(){localStorage.removeItem('vnc_profile');location.reload()}
 function init(){
  if(!myProfile){ randNum(); return }
  $('login').style.display='none';
- $('myName').textContent=myProfile.name;
- $('myNum').textContent=myProfile.num;
- $('myAv').textContent=myProfile.name[0].toUpperCase();
+ $('myName').textContent=myProfile.name; $('myNum').textContent=myProfile.num; $('myAv').textContent=myProfile.name[0].toUpperCase();
  renderContacts(); selectGlobal(); setupPeer();
- const q=new URLSearchParams(location.search).get('add');
- if(q && validVnC(q) && q!==myProfile.num){ addContact(q) }
 }
 function renderContacts(){
  const list=$('contactList'); list.innerHTML='';
  contacts.forEach(c=>{
    const d=document.createElement('div'); d.className='item'+(current&&current.id===c.id?' active':'');
-   d.innerHTML=`<div class="av">${c.name[0].toUpperCase()}</div><div style="flex:1"><b>${c.name}</b><i>${c.id}</i></div><span class="badge">${conns[c.id]?'●':'○'}</span>`;
-   d.onclick=()=>selectPeer(c);
-   list.appendChild(d);
+   d.innerHTML=`<div class="avatar">${c.name[0]}</div><div style="flex:1"><b style="font-size:13px">${c.name}</b><div style="font-size:11px;color:var(--muted);font-family:var(--mono)">${c.id}</div></div>`;
+   d.onclick=()=>selectPeer(c); list.appendChild(d);
  })
 }
 function addContact(pref){
- let id=pref||$('searchIn').value.trim().toUpperCase();
+ let id=(pref||$('searchIn').value).trim();
  if(!validVnC(id)){alert('Format VnC-XXXX-XXXX');return}
- if(id===myProfile.num){alert('Itu nomer lu sendiri dawg');return}
+ const m=id.match(/(\d{4})-(\d{4})/); id=`VnC-${m[1]}-${m[2]}`;
+ if(id===myProfile.num){alert('Itu nomer lu sendiri');return}
  if(contacts.find(x=>x.id===id)){selectPeer(contacts.find(x=>x.id===id));return}
- const obj={id,name:'User '+id.split('-')[1],added:Date.now()};
- contacts.unshift(obj); localStorage.setItem('vnc_contacts',JSON.stringify(contacts));
- $('searchIn').value=''; renderContacts(); selectPeer(obj);
+ const obj={id,name:'User '+m[1]}; contacts.unshift(obj); localStorage.setItem('vnc_contacts',JSON.stringify(contacts)); $('searchIn').value=''; renderContacts(); selectPeer(obj);
 }
-function selectGlobal(){ current={type:'global',id:'global'}; $('chatTitle').textContent='# Global Chat'; $('chatSub').textContent='Semua orang'; renderMsgs(); }
-function selectPeer(c){ current={type:'peer',id:c.id}; $('chatTitle').textContent=c.name; $('chatSub').textContent=c.id; document.body.classList.remove('show-side'); renderMsgs(); ensureConn(c.id); }
+function selectGlobal(){ current={type:'global',id:'global'}; $('chatTitle').textContent='# Global Chat'; renderMsgs(); }
+function selectPeer(c){ current={type:'peer',id:c.id}; $('chatTitle').textContent=c.name; $('chatSub').textContent=c.id; renderMsgs(); ensureConn(c.id); }
 function chatKey(id){ return `vnc_chat_${myProfile.num}_${id}` }
 function getMsgs(id){ return JSON.parse(localStorage.getItem(chatKey(id))||'[]') }
+function pushMsg(id,m){ const arr=getMsgs(id); arr.push(m); localStorage.setItem(chatKey(id),JSON.stringify(arr)) }
+function renderMsgs(){
+ const box=$('msgs'); box.innerHTML='';
+ if(!current)return;
+ let msgs=current.type==='global'?JSON.parse(localStorage.getItem('vnc_global_msgs')||'[]'):getMsgs(current.id);
+ if(!msgs.length){box.innerHTML='<div class="empty">Belum ada pesan</div>';return}
+ msgs.forEach(m=>{
+   const isMe=m.from===myProfile.num;
+   box.innerHTML+=`<div class="bubble ${isMe?'me':'them'}">${m.text.replace(/</g,'&lt;')}<div style="font-size:10px;opacity:.6;margin-top:4px">${m.name}</div></div>`;
+ });
+ box.scrollTop=box.scrollHeight;
+}
+function sendMsg(){
+ const txt=$('msgIn').value.trim(); if(!txt||!current)return;
+ const msg={text:txt,ts:Date.now(),from:myProfile.num,name:myProfile.name};
+ if(current.type==='global'){
+   const arr=JSON.parse(localStorage.getItem('vnc_global_msgs')||'[]'); arr.push(msg); localStorage.setItem('vnc_global_msgs',JSON.stringify(arr)); chan.postMessage(msg); Object.values(conns).forEach(c=>{try{c.send({type:'global',msg})}catch(e){}});
+ } else { pushMsg(current.id,msg); if(conns[current.id])try{conns[current.id].send({type:'dm',msg})}catch(e){} }
+ $('msgIn').value=''; renderMsgs();
+}
+chan.onmessage=e=>{ const arr=JSON.parse(localStorage.getItem('vnc_global_msgs')||'[]'); arr.push(e.data); localStorage.setItem('vnc_global_msgs',JSON.stringify(arr)); if(current&&current.type==='global')renderMsgs(); };
+function setupPeer(){
+ const peerId=myProfile.num.replace(/-/g,'').toLowerCase();
+ try{ peer=new Peer(peerId); }catch(e){ peer=new Peer() }
+ peer.on('open',()=>{ $('pStatus').textContent='online'; $('pStatus').classList.add('on'); });
+ peer.on('connection',conn=>{ conns[conn.peer]=conn; conns[conn.peer.replace('vnc','VnC-').replace(/(\d{4})(\d{4})/,'$1-$2')] = conn; conn.on('data',handleData); });
+}
+function vncToPeer(v){ return v.replace(/-/g,'').toLowerCase() }
+function ensureConn(vncId){ if(!peer)return; const pid=vncToPeer(vncId); if(conns[pid])return; const conn=peer.connect(pid); conns[pid]=conn; conns[vncId]=conn; conn.on('data',handleData); }
+function handleData(d){ if(!d||!d.msg)return; if(d.type==='global'){ const arr=JSON.parse(localStorage.getItem('vnc_global_msgs')||'[]'); arr.push(d.msg); localStorage.setItem('vnc_global_msgs',JSON.stringify(arr)); if(current&&current.type==='global')renderMsgs(); } else { pushMsg(d.msg.from,d.msg); if(current&&current.id===d.msg.from)renderMsgs(); } }
+init();
+</script>
+</body>
+</html> JSON.parse(localStorage.getItem(chatKey(id))||'[]') }
 function pushMsg(id,m){ const arr=getMsgs(id); arr.push(m); localStorage.setItem(chatKey(id),JSON.stringify(arr)) }
 function renderMsgs(){
  const box=$('msgs'); box.innerHTML='';
