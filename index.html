@@ -106,9 +106,7 @@ $("#hostId").addEventListener("keydown",e=>{if(e.key==="Enter")$("#join").click(
 $("#sendForm").addEventListener("submit",e=>{e.preventDefault();const text=$("#message").value.trim();if(!text)return;const time=Date.now();if(mode==="private"){const c=active&&conns.get(active.id);if(!c?.open){toast("Hubungkan ke teman dulu");return}c.send({type:"chat",name:me.name,text,time});message(me.name,text,time,true)}else{const payload={type:"global-chat",name:me.name,text,time};if(hostMode){broadcast(payload);message(me.name,text,time,true)}else if(hostId&&conns.get(hostId)?.open){conns.get(hostId).send(payload);message(me.name,text,time,true)}else{toast("Buat atau gabung global room dulu");return}}$("#message").value=""});
 try{const s=JSON.parse(localStorage.getItem(KEY));if(s?.name&&s?.id&&/^vnc-\d{8}$/.test(s.id)){me=sse(localStorage.getItem('vnc_global_msgs')||'[]'); arr.push(d.msg); localStorage.setItem('vnc_global_msgs',JSON.stringify(arr)); if(current&&current.type==='global')renderMsgs(); } else { pushMsg(d.msg.from,d.msg); if(current&&current.id===d.msg.from)renderMsgs(); } }
 init();
-</script>
-</body>
-</html> JSON.parse(localStorage.getItem(chatKey(id))||'[]') }
+JSON.parse(localStorage.getItem(chatKey(id))||'[]') }
 function pushMsg(id,m){ const arr=getMsgs(id); arr.push(m); localStorage.setItem(chatKey(id),JSON.stringify(arr)) }
 function renderMsgs(){
  const box=$('msgs'); box.innerHTML='';
